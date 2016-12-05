@@ -1,23 +1,11 @@
 defmodule MobileDelegator.Controllers.User do
   import MobileDelegator.Controller
 
-  def index(conn) do
-    send conn, :ok, "Hello, User Controller!"
-  end
+  @api "http://35.161.51.205:3000/api/v1"
 
-  def show(conn, _params) do
-    case req("") do
-      {:ok, body} -> send conn, :ok, body
-      {:error, _body} -> send conn, :error, "not found"
-    end
-  end
+  def signin(conn) do
+    {status, body} = post(@api, ["auth", "signin"], conn.body_params)
 
-  defp req(path) do
-    %HTTPoison.Response{
-      body: body,
-      status_code: status_code
-    } = HTTPoison.get! "35.161.51.205:3000/api/v1/#{path}"
-
-    {status(status_code), body}
+    send conn, status, body
   end
 end

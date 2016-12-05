@@ -8,6 +8,10 @@ defmodule MobileDelegator.Routers.User do
 
   alias MobileDelegator.Controllers.User
 
-  get "/", do: User.index conn
+  post "/signin", do: User.signin conn
   get "/:id", do: User.show conn, %{"id" => id}
+
+  match _ do
+    send_resp(conn, 404, "Not Found")
+  end
 end
